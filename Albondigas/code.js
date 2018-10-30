@@ -8,6 +8,8 @@ var character;
 var music;
 var sound;
 
+var speed = 12;
+
 function preload() {
     game.load.image('background', 'assets/background.png');
     game.load.image('hamburger', 'assets/hamburger.png');
@@ -20,6 +22,8 @@ function preload() {
 
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.gravity.y = 1000;
+
     game.add.sprite(0,0,'background');
     music = game.add.audio('shampoo');
     sound = game.add.audio('numkey');
@@ -30,44 +34,48 @@ function create() {
     platforms.enableBody = true;
 
     var suelo = platforms.create(0, game.world.height - 64, 'plataforma');
-    suelo.scale.setTo(2,2);
+    suelo.scale.setTo(2.1,2);
     suelo.body.immovable = true;
+    suelo.body.allowGravity = false;
 
     hamburgers = game.add.group();
     hamburgers.enableBody = true;
 
     var HAMBURGER = [];
-    HAMBURGER[0] = hamburgers.create(50, 50, 'hamburger');
-    HAMBURGER[0].scale.setTo(0.1, 0.1);
 
-    hamburgers.body.immovable = true;
+    for(var i=0; i<3; i++) {
+        HAMBURGER[i] = hamburgers.create(50, 50+60*i, 'hamburger');
+        HAMBURGER[i].scale.setTo(0.1, 0.1);
+        HAMBURGER[i].body.immovable = true;
+        HAMBURGER[i].body.allowGravity = false;
+    }
     
     character = game.add.sprite(300, 300, 'personaje');
     game.physics.enable(character, Phaser.Physics.ARCADE);
     character.body.collideWorldBounds = true;
     character.scale.setTo(0.4,0.4);
+    character.anchor.setTo(0.5,0.5);
 
     character.animations.add('andar');
     character.animations.play('andar', 25, true);
 }
 
 function update() {
+    game.physics.arcade.collide(platforms, character);
 
-    game.physics.arcade.collide(suelo, personaje);
-
-
-    if (checkOverlap(personaje, hamburguesa))
+    if (checkOverlap(character, hamburgers))
     {
         //Sucede algo
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
     {
-        //personaje izquierda
-    }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+        character.scale.setTo(-0.4,0.4);
+        character.x -= speed;
+    }else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
     {
-        //personaje derecha
+        character.scale.setTo(0.4,0.4);
+        character.x += speed;
     }else if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
         //personaje salta
     }
