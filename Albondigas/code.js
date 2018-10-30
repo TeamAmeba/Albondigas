@@ -53,4 +53,31 @@ function create() {
 
 function update() {
 
+    game.physics.arcade.collide(suelo, personaje);
+
+
+    if (checkOverlap(personaje, hamburguesa))
+    {
+        //Sucede algo
+    }
+
+    if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+    {
+        //personaje izquierda
+    }
+    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+    {
+        //personaje derecha
+    }else if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
+        //personaje salta
+    }
+}
+
+function checkOverlap(spriteA, spriteB) {
+
+    var boundsA = spriteA.getBounds();
+    var boundsB = spriteB.getBounds();
+
+    return Phaser.Rectangle.intersects(boundsA, boundsB);
+
 }
